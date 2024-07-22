@@ -44,7 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String socialId = kakaoResponse.getProvider() + " " + kakaoResponse.getProviderId();
 
         log.info("SocialId : {}", socialId);
-        log.info("Nickname : {}", kakaoResponse.getName());
+        log.info("Nickname : {}", kakaoResponse.getNickname());
         log.info("Email : {}", kakaoResponse.getEmail());
 
         // 기존 사용자 조회
@@ -54,17 +54,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 사용자가 없으면 새로운 사용자 저장
         if (existData.isEmpty()) {
             userRepository.save(User.builder()
-                            .nickname(kakaoResponse.getName())
+                            .nickname(kakaoResponse.getNickname())
                             .email(kakaoResponse.getEmail())
-                            .profileImageUrl(kakaoResponse.getProfileUrl())
+                            .profileImageUrl(kakaoResponse.getProfileImageUrl())
                             .socialId(socialId)
                             .role(role)
                             .gender(Gender.FEMALE)    //기본값을 여자로
                     .build());
             // 사용자가 있으면 기존 사용자 정보 업데이트
         } else {
-            existData.get().updateUsername(socialId);
+            existData.get().updateSocialId(socialId);
             existData.get().updateEmail(kakaoResponse.getEmail());
+            existData.get().updateNickname(kakaoResponse.getNickname());
+            existData.get().updateProfileImageUrl(kakaoResponse.getProfileImageUrl());
             role = existData.get().getRole();
 
             userRepository.save(existData.get());

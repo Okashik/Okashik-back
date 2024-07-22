@@ -26,11 +26,11 @@ public class KakaoResponse {
         return kakaoAccountAttribute.get("email").toString();
     }
 
-    public String getName() {
+    public String getNickname() {
         return profileAttribute.get("nickname").toString();
     }
 
-    public String getProfileUrl() {
+    public String getProfileImageUrl() {
         return profileAttribute.get("profile_image_url").toString();
     }
 }

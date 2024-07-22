@@ -1,8 +1,8 @@
 package com.example.todaylunch.domain.kakaoMapApi.service;
 
 import com.example.todaylunch.domain.kakaoMapApi.entity.Category;
-import com.example.todaylunch.domain.kakaoMapApi.dto.RequestDTO;
-import com.example.todaylunch.domain.kakaoMapApi.dto.ResponseDTO;
+import com.example.todaylunch.domain.kakaoMapApi.dto.KakaoMapApiRequest;
+import com.example.todaylunch.domain.kakaoMapApi.dto.KakaoMapApiResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class ApiService {
         this.yAddress = "37.4003183";
     }
 
-    public ResponseDTO getRandomFromApi(RequestDTO requestDTO) throws Exception{
+    public KakaoMapApiResponse getRandomFromApi(KakaoMapApiRequest kakaoMapApiRequest) throws Exception{
         Random ran=new Random();
         RestTemplate restTemplate = new RestTemplate();
 
@@ -40,7 +40,7 @@ public class ApiService {
         headers.add("Authorization", "KakaoAK " + apiKey);
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        Category category = requestDTO.getCategory().get(ran.nextInt(requestDTO.getCategory().size()));
+        Category category = kakaoMapApiRequest.getCategory().get(ran.nextInt(kakaoMapApiRequest.getCategory().size()));
         Map<String, String> param = setParam(category, 1, ran.nextInt(45)+1);
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(apiUrl);
@@ -60,7 +60,7 @@ public class ApiService {
         JsonNode documents = root.path("documents");
         JsonNode firstDocument = documents.get(0);
 
-        return ResponseDTO.builder()
+        return KakaoMapApiResponse.builder()
                 .id(firstDocument.path("id").asLong())
                 .xAddress(firstDocument.path("x").asText())
                 .yAddress(firstDocument.path("y").asText())
@@ -72,8 +72,8 @@ public class ApiService {
                 .build();
     }
 
-    public List<ResponseDTO> getListFromApi(Category category) throws Exception {
-        List<ResponseDTO> responseList = new ArrayList<>();
+    public List<KakaoMapApiResponse> getListFromApi(Category category) throws Exception {
+        List<KakaoMapApiResponse> responseList = new ArrayList<>();
         for(int i=0;i<2;i++){
             RestTemplate restTemplate = new RestTemplate();
 
@@ -101,7 +101,7 @@ public class ApiService {
             Iterator<JsonNode> elements = documents.elements();
             while (elements.hasNext()) {
                 JsonNode document = elements.next();
-                ResponseDTO responseDTO = ResponseDTO.builder()
+                KakaoMapApiResponse kakaoMapApiResponse = KakaoMapApiResponse.builder()
                         .id(document.path("id").asLong())
                         .xAddress(document.path("x").asText())
                         .yAddress(document.path("y").asText())
@@ -112,7 +112,7 @@ public class ApiService {
                         .distance(document.path("distance").asInt())
                         .build();
 
-                responseList.add(responseDTO);
+                responseList.add(kakaoMapApiResponse);
             }
         }
         return responseList;

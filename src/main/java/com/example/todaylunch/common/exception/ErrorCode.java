@@ -22,7 +22,9 @@ public enum ErrorCode {
     REFRESH_TOKEN_EXPIRED(403, "JWT_002", "Refresh Token Expired"),
     ACCESS_TOKEN_NOT_FOUND(404, "JWT_003", "토큰을 찾을 수 없습니다"),
     INVALID_TOKEN_SIGNATURE(403, "JWT_004", "Invalid Token"),
-    INVALID_CLAIM(401, "JWT_005", "Invalid Claim");
+    INVALID_CLAIM(401, "JWT_005", "Invalid Claim"),
+    //custom
+    INVALID_SESSION(401, "C008", "Invalid Session");
 
     private final String code;
     private final String message;

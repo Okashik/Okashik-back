@@ -34,15 +34,23 @@ public class User {
         this.gender = gender;
     }
 
-    public void updateUsername(String username) {
-        this.socialId = username;
+    public void updateSocialId(String socialId) {
+        this.socialId = socialId;
     }
 
     public void updateEmail(String email) {
         this.email = email;
     }
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public void updateGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }
