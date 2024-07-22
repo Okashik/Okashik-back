@@ -2,10 +2,12 @@ package com.example.todaylunch.domain.auth.service;
 
 import com.example.todaylunch.domain.auth.dto.CustomOAuth2User;
 import com.example.todaylunch.domain.auth.dto.KakaoResponse;
+import com.example.todaylunch.domain.user.entity.Gender;
 import com.example.todaylunch.domain.user.entity.Role;
 import com.example.todaylunch.domain.user.entity.User;
 import com.example.todaylunch.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -16,6 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
@@ -38,24 +41,29 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        String username = kakaoResponse.getProvider() + " " + kakaoResponse.getProviderId();
+        String socialId = kakaoResponse.getProvider() + " " + kakaoResponse.getProviderId();
+
+        log.info("SocialId : {}", socialId);
+        log.info("Nickname : {}", kakaoResponse.getName());
+        log.info("Email : {}", kakaoResponse.getEmail());
 
         // 기존 사용자 조회
-        Optional<User> existData = userRepository.findByUsername(username);
+        Optional<User> existData = userRepository.findBySocialId(socialId);
         Role role = Role.GUEST;
 
         // 사용자가 없으면 새로운 사용자 저장
         if (existData.isEmpty()) {
             userRepository.save(User.builder()
-                            .name(kakaoResponse.getName())
+                            .nickname(kakaoResponse.getName())
                             .email(kakaoResponse.getEmail())
-                            .profileUrl(kakaoResponse.getProfileUrl())
-                            .username(username)
+                            .profileImageUrl(kakaoResponse.getProfileUrl())
+                            .socialId(socialId)
                             .role(role)
+                            .gender(Gender.FEMALE)    //기본값을 여자로
                     .build());
             // 사용자가 있으면 기존 사용자 정보 업데이트
         } else {
-            existData.get().updateUsername(username);
+            existData.get().updateUsername(socialId);
             existData.get().updateEmail(kakaoResponse.getEmail());
             role = existData.get().getRole();
 
