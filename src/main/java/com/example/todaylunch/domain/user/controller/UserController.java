@@ -6,10 +6,16 @@ import com.example.todaylunch.domain.user.dto.UserResponse;
 import com.example.todaylunch.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Controller
@@ -18,8 +24,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    @Value("${apiKey}")
+    private String apiKey;
 
-    @GetMapping("/kakao/v1/user")
+    @GetMapping("/v1/user")
     @ResponseBody
     public ResponseEntity<UserResponse> getUser(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
@@ -27,7 +35,7 @@ public class UserController {
                 .body(userService.getUser(customOAuth2User.getSocialId()));
     }
 
-    @PostMapping("/kakao/v1/user")
+    @PostMapping("/v1/user")
     @ResponseBody
     public ResponseEntity<UserResponse> updateUser(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
@@ -36,20 +44,8 @@ public class UserController {
                 .body(userService.updateUser(customOAuth2User.getSocialId(), userRequest));
     }
 
-    @GetMapping("kakao/v1/login")
+    @GetMapping("/v1/login/kakao")
     public String login() {
         return "redirect:/oauth2/authorization/kakao";
-    }
-
-    @GetMapping("kakao/v1/logout")
-    public String logout() {
-        return "redirect:/logout";
-    }
-
-    @GetMapping("/")
-    @ResponseBody
-    public String mainAPI() {
-
-        return "homepage";
     }
 }

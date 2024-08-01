@@ -24,7 +24,9 @@ public enum ErrorCode {
     INVALID_TOKEN_SIGNATURE(403, "JWT_004", "Invalid Token"),
     INVALID_CLAIM(401, "JWT_005", "Invalid Claim"),
     //custom
-    INVALID_SESSION(401, "C008", "Invalid Session");
+    INVALID_SESSION(401, "C008", "Invalid Session"),
+    INVALID_APIKEY(401, "C009", "Invalid Api Key"),
+    CANNOT_LOGOUT_OAUTH_SERVICE(401, "C010", "Cannot logout OAuth Service");
 
     private final String code;
     private final String message;

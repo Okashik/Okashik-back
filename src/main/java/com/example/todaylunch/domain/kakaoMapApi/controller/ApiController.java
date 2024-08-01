@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/kakao/v1/category")
+@RequestMapping("/v1/category")
 public class ApiController {
 
     private final ApiService apiService;

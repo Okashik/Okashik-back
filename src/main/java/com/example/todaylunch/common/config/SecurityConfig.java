@@ -1,5 +1,6 @@
 package com.example.todaylunch.common.config;
 
+import com.example.todaylunch.domain.auth.handler.KakaoLogoutHandler;
 import com.example.todaylunch.domain.auth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,14 +16,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService oAuth2UserService;
+    private final KakaoLogoutHandler kakaoLogoutHandler;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
                 // error endpoint를 열어줘야 함, favicon.ico 추가!
-                .requestMatchers("/error", "/favicon.ico", "/kakao/v1/category", "/kakao/v1/category/list/**");
+                .requestMatchers("/error", "/favicon.ico", "/v1/category", "/v1/category/list/**");
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,10 +44,14 @@ public class SecurityConfig {
                         .userService(oAuth2UserService)));
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/oauth2/**", "/login").permitAll()
+                .requestMatchers("/", "/oauth2/**", "/login", "/v1/logout/kakao", "/v1/login/kakao").permitAll()
                 .anyRequest().authenticated()
-
         );
+        http.logout(logout -> logout.logoutUrl("/v1/logout/kakao")
+                .addLogoutHandler(kakaoLogoutHandler)
+                .logoutSuccessUrl("/")
+                .permitAll());
+
 
         return http.build();
     }

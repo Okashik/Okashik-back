@@ -35,22 +35,32 @@ public class User {
     }
 
     public void updateSocialId(String socialId) {
-        this.socialId = socialId;
+        if(socialId!=null) {
+            this.socialId = socialId;
+        }
     }
 
     public void updateEmail(String email) {
-        this.email = email;
+        if(email!=null) {
+            this.email = email;
+        }
     }
 
     public void updateNickname(String nickname) {
-        this.nickname = nickname;
+        if(nickname!=null) {
+            this.nickname = nickname;
+        }
     }
 
     public void updateGender(Gender gender) {
-        this.gender = gender;
+        if(gender!=null){
+            this.gender = gender;
+        }
     }
 
     public void updateProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+        if(profileImageUrl!=null) {
+            this.profileImageUrl = profileImageUrl;
+        }
     }
 }
