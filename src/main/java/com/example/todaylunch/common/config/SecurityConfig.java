@@ -41,6 +41,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        // CORS 설정 추가
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
         // CSRF 보호 비활성화
         http.csrf(csrf -> csrf.disable());
 
@@ -67,9 +70,6 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .permitAll());
 
-        // CORS 설정 추가
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-
         return http.build();
     }
 
@@ -77,9 +77,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Collections.singletonList(frontUri)); // 프론트 서버 주소
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "HEAD"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "PATCH"));
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // 명시적인 헤더 설정
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With", "Accept"));
+        config.setExposedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // 필요한 경우 노출 헤더 추가
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
