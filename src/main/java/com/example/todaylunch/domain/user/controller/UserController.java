@@ -6,16 +6,11 @@ import com.example.todaylunch.domain.user.dto.UserResponse;
 import com.example.todaylunch.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Controller
@@ -24,8 +19,6 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    @Value("${apiKey}")
-    private String apiKey;
 
     @GetMapping("/v1/user")
     @ResponseBody

@@ -15,8 +15,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Collections;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -27,7 +30,7 @@ public class SecurityConfig {
     private final KakaoLogoutHandler kakaoLogoutHandler;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
     private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
-    @Value("${frontUri}")String frontUri;
+    @Value("${frontUri}") String frontUri;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
@@ -48,20 +51,6 @@ public class SecurityConfig {
         // HTTP Basic 인증 비활성화
         http.httpBasic(basic -> basic.disable());
 
-        //CORS 세팅
-        http.cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-            @Override
-            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList(frontUri));//프론트 서버 주소
-                config.setAllowedMethods(Collections.singletonList("*"));
-                config.setAllowCredentials(true);
-                config.setAllowedHeaders(Collections.singletonList("*"));
-                config.setMaxAge(3600L);
-                return config;
-            }
-        }));
-
         // OAuth2 로그인 설정
         http.oauth2Login(oauth2 -> oauth2
                 // 커스텀한 서비스 클래스를 설정
@@ -79,6 +68,23 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .permitAll());
 
+        // CORS 설정 추가
+        http.cors(withDefaults());
+
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Collections.singletonList(frontUri)); // 프론트 서버 주소
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowCredentials(true);
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
