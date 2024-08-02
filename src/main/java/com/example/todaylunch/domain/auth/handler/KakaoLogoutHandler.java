@@ -4,11 +4,9 @@ import com.example.todaylunch.common.exception.BusinessException;
 import com.example.todaylunch.common.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,7 +15,7 @@ public class KakaoLogoutHandler implements LogoutHandler {
     @Value("${apiKey}")
     private String clientId;
 
-    @Value("${logoutRedirectUri}")
+    @Value("${frontUri}")
     private String logoutRedirectUri;
 
     @Override
@@ -33,6 +31,5 @@ public class KakaoLogoutHandler implements LogoutHandler {
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.CANNOT_LOGOUT_OAUTH_SERVICE);
         }
-
     }
 }
