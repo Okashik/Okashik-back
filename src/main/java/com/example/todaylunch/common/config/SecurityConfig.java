@@ -4,7 +4,6 @@ import com.example.todaylunch.domain.auth.handler.CustomOAuth2FailureHandler;
 import com.example.todaylunch.domain.auth.handler.CustomOAuth2SuccessHandler;
 import com.example.todaylunch.domain.auth.handler.KakaoLogoutHandler;
 import com.example.todaylunch.domain.auth.service.CustomOAuth2UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,10 +16,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -64,6 +61,9 @@ public class SecurityConfig {
                         .userService(oAuth2UserService)));
 
         http.authorizeHttpRequests(auth -> auth
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll());
+
+        http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/oauth2/**", "/login", "/v1/logout/kakao", "/v1/login/kakao", "/v1/category", "/v1/category/list/**").permitAll()
                 .anyRequest().authenticated()
         );
@@ -79,11 +79,11 @@ public class SecurityConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Collections.singletonList(frontUri)); // 프론트 서버 주소
-        config.setAllowedMethods(Collections.singletonList("*"));
+        config.addAllowedOriginPattern("*"); // 프론트 서버 주소
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");;
+        config.addExposedHeader("x-auth-token");
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With", "Accept"));
-        config.setExposedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // 필요한 경우 노출 헤더 추가
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
