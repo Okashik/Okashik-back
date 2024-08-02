@@ -14,12 +14,11 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/v1/category")
 public class ApiController {
 
     private final ApiService apiService;
 
-    @PostMapping("/")
+    @PostMapping("/v1/category")
     public ResponseEntity<KakaoMapApiResponse> getRandomFromApi(
             @RequestBody KakaoMapApiRequest kakaoMapApiRequest
     ) throws Exception {
@@ -27,7 +26,7 @@ public class ApiController {
                 .body(apiService.getRandomFromApi(kakaoMapApiRequest));
     }
 
-    @GetMapping("/list/{category}")
+    @GetMapping("/v1/category/list/{category}")
     public ResponseEntity<List<KakaoMapApiResponse>> getListFromApi(
             @PathVariable("category")Category category
     ) throws Exception {
