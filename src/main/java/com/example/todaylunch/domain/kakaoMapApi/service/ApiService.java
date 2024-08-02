@@ -32,6 +32,7 @@ public class ApiService {
     }
 
     public KakaoMapApiResponse getRandomFromApi(KakaoMapApiRequest kakaoMapApiRequest) throws Exception{
+        log.info("Call: getRandomFromApi Service Method");
         Random ran=new Random();
         RestTemplate restTemplate = new RestTemplate();
 

@@ -22,6 +22,7 @@ public class ApiController {
     public ResponseEntity<KakaoMapApiResponse> getRandomFromApi(
             @RequestBody KakaoMapApiRequest kakaoMapApiRequest
     ) throws Exception {
+        log.info("Call: getRandomFromApi Controller Method");
         return ResponseEntity.ok()
                 .body(apiService.getRandomFromApi(kakaoMapApiRequest));
     }
