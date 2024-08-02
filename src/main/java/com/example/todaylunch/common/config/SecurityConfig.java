@@ -20,8 +20,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -70,7 +68,7 @@ public class SecurityConfig {
                 .permitAll());
 
         // CORS 설정 추가
-        http.cors(withDefaults());
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
@@ -79,9 +77,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Collections.singletonList(frontUri)); // 프론트 서버 주소
-        config.setAllowedMethods(Arrays.asList("GET", "POST"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "HEAD"));
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // 명시적인 헤더 설정
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
