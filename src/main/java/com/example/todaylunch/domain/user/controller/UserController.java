@@ -25,7 +25,7 @@ public class UserController {
     public ResponseEntity<UserResponse> getUser(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         return ResponseEntity.ok()
-                .body(userService.getUser(customOAuth2User.getSocialId()));
+                .body(userService.getUser(customOAuth2User.getEmail()));
     }
 
     @PostMapping("/v1/user")
@@ -34,7 +34,7 @@ public class UserController {
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @RequestBody UserRequest userRequest) {
         return ResponseEntity.ok()
-                .body(userService.updateUser(customOAuth2User.getSocialId(), userRequest));
+                .body(userService.updateUser(customOAuth2User.getEmail(), userRequest));
     }
 
     @GetMapping("/v1/login/kakao")

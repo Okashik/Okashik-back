@@ -42,4 +42,8 @@ public class CustomOAuth2User implements OAuth2User {
     public String getSocialId() {
         return kakaoResponse.getProvider() + " " + kakaoResponse.getProviderId();
     }
+
+    public String getEmail() {
+        return kakaoResponse.getEmail();
+    }
 }

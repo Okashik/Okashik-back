@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserRequest {
     private String nickname;
-    private String email;
     private Gender gender;
 }

@@ -48,7 +48,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         log.info("Email : {}", kakaoResponse.getEmail());
 
         // 기존 사용자 조회
-        Optional<User> existData = userRepository.findBySocialId(socialId);
+        Optional<User> existData = userRepository.findByEmail(kakaoResponse.getEmail());
         Role role = Role.GUEST;
 
         // 사용자가 없으면 새로운 사용자 저장

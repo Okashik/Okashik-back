@@ -15,21 +15,20 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserResponse getUser(String socialId) {
+    public UserResponse getUser(String email) {
         return UserResponse.builder()
-                .user(userRepository.findBySocialId(socialId).orElseThrow(
+                .user(userRepository.findByEmail(email).orElseThrow(
                         () -> new BusinessException(ErrorCode.INVALID_SESSION)
                 ))
                 .build();
     }
 
     @Transactional
-    public UserResponse updateUser(String socialId, UserRequest userRequest) {
-        User user = userRepository.findBySocialId(socialId).orElseThrow(
+    public UserResponse updateUser(String email, UserRequest userRequest) {
+        User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new BusinessException(ErrorCode.INVALID_SESSION)
         );
         user.updateNickname(userRequest.getNickname());
-        user.updateEmail(userRequest.getEmail());
         user.updateGender(userRequest.getGender());
         return UserResponse.builder()
                 .user(user)
