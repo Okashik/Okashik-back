@@ -76,9 +76,9 @@ public class SecurityConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOriginPattern("*"); // 프론트 서버 주소
+        config.addAllowedOriginPattern(frontUri); // 프론트 서버 주소
         config.addAllowedMethod("*");
-        config.addAllowedHeader("*");;
+        config.addAllowedHeader("*");
         config.addExposedHeader("x-auth-token");
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
