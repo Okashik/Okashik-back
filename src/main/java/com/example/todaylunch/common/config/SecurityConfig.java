@@ -1,6 +1,5 @@
 package com.example.todaylunch.common.config;
 
-import com.example.todaylunch.domain.auth.handler.CustomOAuth2FailureHandler;
 import com.example.todaylunch.domain.auth.handler.CustomOAuth2SuccessHandler;
 import com.example.todaylunch.domain.auth.handler.KakaoLogoutHandler;
 import com.example.todaylunch.domain.auth.service.CustomOAuth2UserService;
@@ -27,7 +26,6 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final KakaoLogoutHandler kakaoLogoutHandler;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
-    private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
     @Value("${frontUri}") String frontUri;
 
     @Bean
@@ -56,7 +54,6 @@ public class SecurityConfig {
         http.oauth2Login(oauth2 -> oauth2
                 // 커스텀한 서비스 클래스를 설정
                 .successHandler(customOAuth2SuccessHandler)
-                .failureHandler(customOAuth2FailureHandler)
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(oAuth2UserService)));
 
