@@ -37,8 +37,10 @@ public class UserController {
                 .body(userService.updateUser(customOAuth2User.getEmail(), userRequest));
     }
 
+    /*
     @GetMapping("/v1/login/kakao")
     public String login() {
         return "redirect:/oauth2/authorization/kakao";
     }
+     */
 }

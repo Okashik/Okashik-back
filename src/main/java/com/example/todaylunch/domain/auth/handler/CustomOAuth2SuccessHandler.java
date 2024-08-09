@@ -19,6 +19,6 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException{
         log.info("Login success");
-        response.sendRedirect(frontUri + "/oauth-callback"); // 프론트엔드 주소로 리디렉션
+        response.sendRedirect(frontUri + "?login=success"); // 프론트엔드 주소로 리디렉션
     }
 }
