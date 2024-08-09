@@ -3,6 +3,9 @@ package com.example.todaylunch.domain.kakaoMapApi.service;
 import com.example.todaylunch.domain.kakaoMapApi.entity.Category;
 import com.example.todaylunch.domain.kakaoMapApi.dto.KakaoMapApiRequest;
 import com.example.todaylunch.domain.kakaoMapApi.dto.KakaoMapApiResponse;
+import com.example.todaylunch.domain.kakaoMapApi.exception.KakaoMapApiErrorCode;
+import com.example.todaylunch.domain.kakaoMapApi.exception.KakaoMapApiException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +34,7 @@ public class ApiService {
         this.yAddress = "37.4003183";
     }
 
-    public KakaoMapApiResponse getRandomFromApi(KakaoMapApiRequest kakaoMapApiRequest) throws Exception{
+    public KakaoMapApiResponse getRandomFromApi(KakaoMapApiRequest kakaoMapApiRequest){
         log.info("Call: getRandomFromApi Service Method");
         Random ran=new Random();
         RestTemplate restTemplate = new RestTemplate();
@@ -57,7 +60,12 @@ public class ApiService {
                 String.class
         );
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode root = objectMapper.readTree(response.getBody());
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(response.getBody());
+        } catch (JsonProcessingException e) {
+            throw new KakaoMapApiException(KakaoMapApiErrorCode.RESTAURANT_NOT_FOUND);
+        }
         JsonNode documents = root.path("documents");
         JsonNode firstDocument = documents.get(0);
 
@@ -73,7 +81,8 @@ public class ApiService {
                 .build();
     }
 
-    public List<KakaoMapApiResponse> getListFromApi(Category category) throws Exception {
+    public List<KakaoMapApiResponse> getListFromApi(Category category){
+        log.info("Call: getListFromApi Service Method");
         List<KakaoMapApiResponse> responseList = new ArrayList<>();
         for(int i=0;i<2;i++){
             RestTemplate restTemplate = new RestTemplate();
@@ -97,7 +106,12 @@ public class ApiService {
                     String.class
             );
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode root = objectMapper.readTree(response.getBody());
+            JsonNode root = null;
+            try {
+                root = objectMapper.readTree(response.getBody());
+            } catch (JsonProcessingException e) {
+                throw new KakaoMapApiException(KakaoMapApiErrorCode.RESTAURANT_NOT_FOUND);
+            }
             JsonNode documents = root.path("documents");
             Iterator<JsonNode> elements = documents.elements();
             while (elements.hasNext()) {

@@ -21,7 +21,7 @@ public class ApiController {
     @PostMapping("/v1/category")
     public ResponseEntity<KakaoMapApiResponse> getRandomFromApi(
             @RequestBody KakaoMapApiRequest kakaoMapApiRequest
-    ) throws Exception {
+    ){
         log.info("Call: getRandomFromApi Controller Method");
         return ResponseEntity.ok()
                 .body(apiService.getRandomFromApi(kakaoMapApiRequest));
@@ -30,7 +30,7 @@ public class ApiController {
     @GetMapping("/v1/category/list/{category}")
     public ResponseEntity<List<KakaoMapApiResponse>> getListFromApi(
             @PathVariable("category")Category category
-    ) throws Exception {
+    ){
         return ResponseEntity.ok()
                 .body(apiService.getListFromApi(category));
     }

@@ -1,5 +1,6 @@
 package com.example.todaylunch.common.config;
 
+import com.example.todaylunch.domain.auth.handler.CustomAuthenticationEntryPoint;
 import com.example.todaylunch.domain.auth.handler.CustomOAuth2SuccessHandler;
 import com.example.todaylunch.domain.auth.handler.KakaoLogoutHandler;
 import com.example.todaylunch.domain.auth.service.CustomOAuth2UserService;
@@ -26,13 +27,14 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final KakaoLogoutHandler kakaoLogoutHandler;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     @Value("${frontUri}") String frontUri;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
                 // error endpoint를 열어줘야 함, favicon.ico 추가!
-                .requestMatchers("/error", "/favicon.ico");
+                .requestMatchers("/error", "/favicon.ico", "/auth/not-secured");
     }
 
     @Bean
@@ -68,6 +70,8 @@ public class SecurityConfig {
                 .addLogoutHandler(kakaoLogoutHandler)
                 .logoutSuccessUrl("/")
                 .permitAll());
+
+        http.exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint));
 
         return http.build();
     }
