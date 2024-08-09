@@ -1,0 +1,48 @@
+apiKey: "c536ad6c27ea9b7f6722c67c9a8ef921"
+apiUrl: "https://dapi.kakao.com/v2/local/search/keyword.json"
+#frontUri: "http://13.238.26.147:80"
+frontUri: "http://okasik.store"
+
+server:
+  servlet:
+    session:
+      timeout: 1800
+
+spring:
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: c536ad6c27ea9b7f6722c67c9a8ef921
+            client-secret: pykQAtc6Xgn0VlMHBGxRdsKrfCVF6gGc
+            redirect-uri: http://13.210.149.175:8080/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            client-name: kakao
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://okashik-mysql.cvuwyoaa0oxa.ap-northeast-2.rds.amazonaws.com:3306/okashik?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: okashik!
