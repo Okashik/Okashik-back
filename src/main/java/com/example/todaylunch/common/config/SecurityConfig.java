@@ -13,6 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -59,13 +60,28 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(oAuth2UserService)));
 
+        // 세션 관리 설정 추가
+        http.sessionManagement(sessionManagement -> sessionManagement
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .sessionFixation().none());
+
+        // 쿠키 도메인 설정
+        http.headers(headers -> headers
+                .addHeaderWriter((request, response) -> {
+                    String domain = "okasik.store";
+                    if (request.getServletPath().startsWith("/v1")) {
+                        response.setHeader("Set-Cookie", "JSESSIONID=" + request.getSession().getId() + "; Domain=" + domain + "; Path=/; Secure; HttpOnly; SameSite=None");
+                    }
+                }));
+
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll());
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll());
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/oauth2/**", "/login", "/v1/logout/kakao", "/v1/login/kakao", "/v1/category", "/v1/category/list/**").permitAll()
                 .anyRequest().authenticated()
         );
+
         http.logout(logout -> logout.logoutUrl("/v1/logout/kakao")
                 .addLogoutHandler(kakaoLogoutHandler)
                 .logoutSuccessUrl("/")
@@ -77,7 +93,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOriginPattern(frontUri); // 프론트 서버 주소
