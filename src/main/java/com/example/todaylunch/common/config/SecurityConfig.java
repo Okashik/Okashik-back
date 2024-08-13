@@ -65,15 +65,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .sessionFixation().none());
 
-        // 쿠키 도메인 설정
-        http.headers(headers -> headers
-                .addHeaderWriter((request, response) -> {
-                    String domain = "okasik.store";
-                    String sessionId = request.getSession().getId();
-                    String cookieValue = String.format("JSESSIONID=%s; Domain=%s; Path=/; Secure; HttpOnly; SameSite=None", sessionId, domain);
-                    response.addHeader("Set-Cookie", cookieValue);
-                }));
-
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll());
 
