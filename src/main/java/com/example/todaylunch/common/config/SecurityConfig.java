@@ -69,9 +69,9 @@ public class SecurityConfig {
         http.headers(headers -> headers
                 .addHeaderWriter((request, response) -> {
                     String domain = "okasik.store";
-                    if (request.getServletPath().startsWith("/v1")) {
-                        response.setHeader("Set-Cookie", "JSESSIONID=" + request.getSession().getId() + "; Domain=" + domain + "; Path=/; Secure; HttpOnly; SameSite=None");
-                    }
+                    String sessionId = request.getSession().getId();
+                    String cookieValue = String.format("JSESSIONID=%s; Domain=%s; Path=/; Secure; HttpOnly; SameSite=None", sessionId, domain);
+                    response.addHeader("Set-Cookie", cookieValue);
                 }));
 
         http.authorizeHttpRequests(auth -> auth
