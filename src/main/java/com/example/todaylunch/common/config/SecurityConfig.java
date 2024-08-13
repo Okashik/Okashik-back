@@ -42,7 +42,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // CORS 설정 추가
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        //http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         // CSRF 보호 비활성화
         http.csrf(csrf -> csrf.disable());
@@ -92,6 +92,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /*
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -106,4 +107,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+     */
 }
